@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Event Details{% endblock %} <!-- Block Stopper: title -->
+
+{% block content %}
+<div class="container mt-5">
+  <h1 class="display-5">Listen Out 2024</h1>
+  <p><strong>Date:</strong> June 5th, 2024</p>
+  <p><strong>Time:</strong> 12:00 PM - 10:00 PM</p>
+  <p><strong>Venue:</strong> Brisbane Showgrounds</p>
+  <p class="lead">Australia’s primary dance music festival with a dynamic hip-hop/electronic lineup.</p>
+
+  <div class="card mt-4">
+    <div class="card-body">
+      <h4 class="card-title">Book Your Tickets</h4>
+      <form>
+        <div class="mb-3">
+          <label for="ticketType" class="form-label">Ticket Type</label>
+          <select class="form-select">
+            <option selected>General Admission - $50</option>
+            <option>VIP - $100</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Book Now</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+<!-- Block Stopper: content -->
