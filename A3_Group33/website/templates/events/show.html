@@ -19,19 +19,7 @@
       </div>  
     </div>  
 
-    <div class="card-group">
-      {% for destination in destinations %}
-      <div class="card mx-3">
-         <img class="card-img-top"
-            src="{{ event.image }}" alt="event picture">
-         <div class="card-body">
-            <h5 class="card-title">{{ event.name }}</h5>
-            <p class="card-text">{{ event.description }}</p>
-         </div>
-         <div class="card-footer"><a href="{{ url_for('events.show', id=events.id) }}" class ="btn btn-danger"> View Details </a></div>
-      </div>
-      {% endfor %}
-   </div>
+ 
  
         <!-- Destination --> 
         <div class="row">  
@@ -44,7 +32,8 @@
                     <small class="font-weight-bold text-muted">Stay 2 nights</small>  
                     <h5 class="mt-0">{{ event.name }}</h5>  
                     <p>{{ event.description }}</p>  
-                    <a href="#" class="btn btn-danger">Book Now</a>  
+                    <!--<a href="#" class="btn btn-danger">Book Now</a> -->
+                    {{ render_form(orderForm,"/events/{0}/order".format(event.id)) }}
                   </div>  
                 </div>  
               </div>  
@@ -64,7 +53,7 @@
           
           {% for comment in event.comments %}
           <div class="col-md-12">  
-            <b>{{ comment.user.name }} <span class="ml-2 text-muted">January 2024</span></b>
+            <b>{{ comment.user.name }} <span class="ml-2 text-muted">{{ comment.created_at }}</span></b>
             <p>{{ comment.text }}</p>  
           </div> 
           {% endfor %} 

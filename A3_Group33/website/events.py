@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
-from .models import Event, Comment
-from .forms import EventForm, CommentForm
+from .models import Event, Comment, Order
+from .forms import EventForm, CommentForm, OrderForm
 from . import db
 from flask_login import login_required, current_user
 import os
@@ -13,7 +13,8 @@ def show(event_id):
     # Retrieve the event using the event_id
     event = db.session.scalar(db.select(Event).where(Event.id == event_id))
     form = CommentForm()  # Create the comment form
-    return render_template('events/show.html', event=event, form=form)
+    orderForm = OrderForm()
+    return render_template('events/show.html', event=event, form=form, orderForm=orderForm)
 
 @eventbp.route('/create', methods=['GET', 'POST'])
 @login_required
@@ -63,14 +64,31 @@ def post_comment(event_id):
     event = Event.query.get_or_404(event_id)
     if form.validate_on_submit():
         comment = Comment(
-            content=form.content.data,
-            user=current_user, 
-            event=event
+            text=form.text.data,
+            user_id=current_user.id, 
+            event_id=event.id
         )
         db.session.add(comment)
         db.session.commit()
         flash('Comment posted!', 'success')
-    return redirect(url_for('booking_history.html', event_id=event.id))  # Redirect to the event show route
+    return redirect(url_for('events.show', event_id=event.id))  # Redirect to the event show route
+
+
+@eventbp.route('/<int:event_id>/order', methods=['POST'])
+@login_required
+def create_order(event_id):
+    form = OrderForm()
+    event = Event.query.get_or_404(event_id)
+    if form.validate_on_submit():
+        order = Order(
+            quantity=form.quantity.data,
+            user_id=current_user.id, 
+            event_id=event.id
+        )
+        db.session.add(order)
+        db.session.commit()
+        flash('Order posted!', 'success')
+    return redirect(url_for('events.booking_history'))  # Redirect to booking history
 
 
 
