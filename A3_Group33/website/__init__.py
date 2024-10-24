@@ -18,7 +18,10 @@ def create_app():
     
     # Set the app configuration data
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sitedata.sqlite'  # Adjust the path if necessary
-    app.config['UPLOAD_FOLDER'] = '/static/image'  # Correct path for upload folder
+    
+    #config upload folder
+    UPLOAD_FOLDER = '/static/image'
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER 
 
     # Initialize extensions with the Flask app
     db.init_app(app)
@@ -36,10 +39,11 @@ def create_app():
         return db.session.get(User, user_id)  # Use get() for primary key lookup
 
     # Register blueprints
-    from . import views, events, auth
+    from . import views, events, auth, api
     app.register_blueprint(views.main_bp)
     app.register_blueprint(events.eventbp, url_prefix='/events')
     app.register_blueprint(auth.auth_bp)
+    app.register_blueprint(api.api_bp)
 
     @app.errorhandler(404)
     def not_found(e):

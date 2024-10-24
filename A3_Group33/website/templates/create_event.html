@@ -4,19 +4,27 @@
 
 {% block content %}
 <div class="container mt-5">
-  <h2 class="text-center mb-4">Create / Update Event</h2>
-  <form action="{{ url_for('events.save_event') }}" method="POST">  <!-- Corrected action -->
+  <h2 class="text-center mb-4">Create Event</h2>
+  <form action="{{ url_for('events.create_event') }}" method="POST" enctype="multipart/form-data"> 
     <div class="mb-3">
       <label for="eventName" class="form-label">Event Name</label>
       <input type="text" class="form-control" id="eventName" name="name" required placeholder="Enter event name">
     </div>
     <div class="mb-3">
       <label for="eventDate" class="form-label">Event Date</label>
-      <input type="date" class="form-control" id="eventDate" name="date" required>
+      <input type="date" class="form-control" id="eventDate" name="event_date" required>
     </div>
     <div class="mb-3">
       <label for="eventLocation" class="form-label">Location</label>
       <input type="text" class="form-control" id="eventLocation" name="location" required placeholder="Enter location">
+    </div>
+    <div class="mb-3">
+      <label for="eventDescription" class="form-label">Description</label>
+      <textarea class="form-control" id="eventDescription" name="description" required placeholder="Enter description"></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="eventImage" class="form-label">Upload Image</label>
+      <input type="file" class="form-control" id="eventImage" name="file" accept="image/*" required>
     </div>
     <button type="submit" class="btn btn-primary">Create Event</button>
   </form>

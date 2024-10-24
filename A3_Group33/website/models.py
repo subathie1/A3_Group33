@@ -13,27 +13,27 @@ class User(db.Model, UserMixin):
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
     orders = db.relationship('Order', backref='order_user', lazy='dynamic')
     bookings = db.relationship('Booking', backref='booking_user', lazy='dynamic')
-    events = db.relationship('Event', backref='organizer', lazy='dynamic')  # New relationship to Event
+    events = db.relationship('Event', backref='user', lazy='dynamic')  # New relationship to Event
 
     def __repr__(self):
         return f"User(Name: {self.name}, Email: {self.emailid})"
 
 class Event(db.Model):
     __tablename__ = 'event'
-    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)  # Ensure this matches
-    # event_name = db.Column(db.String(100), nullable=False)  # Ensure this matches
     description = db.Column(db.String(500))
     event_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Ensure this line exists
+    image = db.Column(db.String(400))
+    location = db.Column(db.String(200), nullable=False)  
 
     # Define the relationship with the Order model
     orders = db.relationship('Order', back_populates='event', cascade='all, delete-orphan', lazy='dynamic')
 
     # Other relationships
     bookings = db.relationship('Booking', backref='event', lazy=True)
-    comments = db.relationship('Comment', back_populates='event', cascade='all, delete-orphan', lazy='dynamic')
+    comments = db.relationship('Comment', backref='destination')
 
     def __repr__(self):
         return f"Event(Name: {self.event_name}, Date: {self.event_date})"
@@ -48,8 +48,7 @@ class Booking(db.Model):
     status = db.Column(db.String(50), default='confirmed')
 
 class Comment(db.Model):
-    __tablename__ = 'comments'
-    
+    __tablename__ = 'comments' 
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(400), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)

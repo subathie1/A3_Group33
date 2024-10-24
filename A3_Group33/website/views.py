@@ -14,14 +14,13 @@ def index():
 
 @main_bp.route('/search')
 def search():
-    query = request.args.get('search', '').strip()
-    if query:
-        events = db.session.scalars(db.select(Event).where(Event.name.ilike(f"%{query}%"))).all()
-        if not events:
-            flash(f'No results found for "{query}".', 'info')
-        return render_template('index.html', events=events)
-    flash('Please enter a search query.', 'info')  # Added feedback for empty query
-    return redirect(url_for('main.index'))  # Use the correct endpoint for redirect
+    if request.args['search'] and request.args['search'] != "":
+        print(request.args['search'])
+        query = "%" + request.args['search'] + "%"
+        destinations = db.session.scalars(db.select(Event)).where(Event.description.like(query))
+        return render_template('index.html', destinations=destinations)
+    else:
+        return redirect(url_for('main.index'))
 
 # Assuming you have an events blueprint as well
 event_bp = Blueprint('events', __name__)

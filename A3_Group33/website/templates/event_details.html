@@ -1,24 +1,24 @@
 {% extends 'base.html' %}
 
-{% block title %}Event Details{% endblock %} <!-- Block Stopper: title -->
+{% block title %}{{ event.name }}{% endblock %} <!-- Block Stopper: title -->
 
 {% block content %}
 <div class="container mt-5">
-  <h1 class="display-5">Listen Out 2024</h1>
-  <p><strong>Date:</strong> June 5th, 2024</p>
-  <p><strong>Time:</strong> 12:00 PM - 10:00 PM</p>
-  <p><strong>Venue:</strong> Brisbane Showgrounds</p>
-  <p class="lead">Australia’s primary dance music festival with a dynamic hip-hop/electronic lineup.</p>
+  <h1 class="display-5">{{ event.name }}</h1>  <!-- Dynamic Event Name -->
+  <p><strong>Date:</strong> {{ event.event_date.strftime('%B %d, %Y') }}</p>  <!-- Dynamic Event Date -->
+  <p><strong>Time:</strong> {{ event.event_date.strftime('%I:%M %p') }} - {{ event.event_date.strftime('%I:%M %p', event.event_date + timedelta(hours=10)) }}</p>  <!-- Dynamic Event Time -->
+  <p><strong>Venue:</strong> {{ event.location }}</p>  <!-- Dynamic Event Location -->
+  <p class="lead">{{ event.description }}</p>  <!-- Dynamic Event Description -->
 
   <div class="card mt-4">
     <div class="card-body">
       <h4 class="card-title">Book Your Tickets</h4>
-      <form>
+      <form method="POST" action="{{ url_for('events.book_tickets', event_id=event.id) }}">  <!-- Assume a route for booking tickets -->
         <div class="mb-3">
           <label for="ticketType" class="form-label">Ticket Type</label>
-          <select class="form-select">
-            <option selected>General Admission - $50</option>
-            <option>VIP - $100</option>
+          <select class="form-select" name="ticket_type" id="ticketType">
+            <option value="general" selected>General Admission - $50</option>
+            <option value="vip">VIP - $100</option>
           </select>
         </div>
         <button type="submit" class="btn btn-primary">Book Now</button>
@@ -26,5 +26,14 @@
     </div>
   </div>
 </div>
+
+<div class="container mt-5">
+  <h1 class="display-5">{{ event.name }}</h1>
+  <img src="{{ url_for('static', filename='image/' + event.image) }}" alt="{{ event.name }}" class="img-fluid">
+  <p><strong>Date:</strong> {{ event.event_date }}</p>
+  <p><strong>Description:</strong> {{ event.description }}</p>
+  ...
+</div>
+
 {% endblock %}
 <!-- Block Stopper: content -->

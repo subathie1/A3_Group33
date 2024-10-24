@@ -5,7 +5,7 @@ from . import db
 from flask_login import login_required, current_user
 
 # Create a Blueprint for events
-api_bp = Blueprint('events', __name__, url_prefix='/events')
+api_bp = Blueprint('api_events', __name__, url_prefix='/api')
 
 @api_bp.route('/create', methods=['GET', 'POST'])
 @login_required
