@@ -36,7 +36,7 @@ class Event(db.Model):
     comments = db.relationship('Comment', backref='destination')
 
     def __repr__(self):
-        return f"Event(Name: {self.event_name}, Date: {self.event_date})"
+        return f"Event(Name: {self.name}, Date: {self.event_date})"
 
 class Booking(db.Model):
     __tablename__ = 'bookings'

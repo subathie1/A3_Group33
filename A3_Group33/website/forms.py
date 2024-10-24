@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField, DateTimeField, IntegerField, SubmitField
+from wtforms import DateTimeLocalField, StringField, PasswordField, TextAreaField, DateTimeField, IntegerField, SubmitField
 from wtforms.validators import InputRequired, Email, EqualTo, Length, NumberRange
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 
@@ -7,14 +7,14 @@ ALLOWED_FILE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'PNG', 'JPG', 'JPEG'}
 
 class EventForm(FlaskForm):
     name = StringField('Event Name', validators=[InputRequired(), Length(min=1, max=100)])
-    event_date = DateTimeField('Event Date (YYYY-MM-DD HH:MM)', format='%Y-%m-%d %H:%M', validators=[InputRequired()])
+    event_date = DateTimeLocalField('Event DateTime', validators=[InputRequired()])
     location = StringField('Location', validators=[InputRequired(), Length(max=100)])
     description = TextAreaField('Description', 
             validators=[InputRequired()])
     image = FileField('Event Image', validators=[
     FileRequired(message='Image cannot be empty'),
     FileAllowed(ALLOWED_FILE_EXTENSIONS , message='Only supports PNG, JPG, png, jpg')])    
-    organizer_name = StringField('Organizer', validators=[Length(max=100)])
+    #organizer_name = StringField('Organizer', validators=[Length(max=100)])
     submit = SubmitField('Create Event')
 
 class LoginForm(FlaskForm):

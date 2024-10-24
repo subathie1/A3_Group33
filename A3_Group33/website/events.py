@@ -13,7 +13,7 @@ def show(event_id):
     # Retrieve the event using the event_id
     event = db.session.scalar(db.select(Event).where(Event.id == event_id))
     form = CommentForm()  # Create the comment form
-    return render_template('events/show', event=event, form=form)
+    return render_template('events/show.html', event=event, form=form)
 
 @eventbp.route('/create', methods=['GET', 'POST'])
 @login_required
@@ -38,12 +38,12 @@ def create_event():
         return redirect(url_for('events.show', event_id=event.id))
     
     print("Form data is not valid.")  # Debugging line
-    return render_template('create_event.html', form=form)
+    return render_template('create_event_wtforms.html', form=form)
 
 
 def check_upload_file(form):
     # Get file data from form
-    fp = form.file.data  # Ensure this matches the name in your form
+    fp = form.image.data  # Ensure this matches the name in your form
     filename = fp.filename
     # Get the current path of the module file and store image file relative to this path  
     BASE_PATH = os.path.dirname(__file__)
