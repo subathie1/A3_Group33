@@ -68,6 +68,29 @@
         </div>
     </div>
 
+    <div class="card mt-5">
+        <h5 class="card-header">Actual Festivals</h5>
+        <div class="card-body">
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for event in events %}
+                <div class="col col-md-6 col-lg-3">
+                    <div class="card small-card h-100">
+                        <img src="{{ event.image }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{event.name}}</h5>
+                            <div class="progress-bar progress-bar-striped bg-success">Open</div>
+                            <p class="card-text">{{event.description}}</p>
+                            <div class="d-flex justify-content-center">
+                                <a href="{{ url_for('events.show', event_id=event.id) }}" class="btn btn-primary mx-2">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
     <!-- Most Popular Festivals Section -->
     <div class="card mt-5">
         <h5 class="card-header">Most Popular Festivals</h5>
