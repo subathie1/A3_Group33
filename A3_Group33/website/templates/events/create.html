@@ -10,6 +10,11 @@
         <h1>Add Festival Event </h1>
         <p>Enter festival you went to.</p>
         {{ render_form(form) }}
+        <div class="mb-3">
+          <label for="ticketsAvailable" class="form-label">Tickets Available</label>
+          <input type="number" class="form-control" id="ticketsAvailable" name="tickets_available" value="100" required>
+      </div>
+      
       </div>
     </div>
   </div>

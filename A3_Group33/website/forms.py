@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import DateTimeLocalField, StringField, PasswordField, TextAreaField, DateTimeField, IntegerField, SubmitField
+from wtforms import DateTimeLocalField, StringField, PasswordField, TextAreaField, DateTimeField, IntegerField, SubmitField, SelectField
 from wtforms.validators import InputRequired, Email, EqualTo, Length, NumberRange
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 
@@ -11,10 +11,22 @@ class EventForm(FlaskForm):
     location = StringField('Location', validators=[InputRequired(), Length(max=100)])
     description = TextAreaField('Description', 
             validators=[InputRequired()])
+    tickets_available = IntegerField('Tickets Available', default=100)  # Add field with default value
+    category = SelectField('Select Category', validators=[InputRequired()], choices=[
+		('Hip Hop', 'Hip Hop'),
+		('Rap', 'Rap'),
+		('Pop', 'Pop'),
+		('R&B', 'R&B'),
+		('Jazz', 'Jazz'),
+		('Indie', 'Indie'),
+		('Rock', 'Rock'),
+		('Country', 'Country'),
+		('Classical', 'Classical'),
+		('Other', 'Other')
+		])
     image = FileField('Event Image', validators=[
     FileRequired(message='Image cannot be empty'),
     FileAllowed(ALLOWED_FILE_EXTENSIONS , message='Only supports PNG, JPG, png, jpg')])    
-    #organizer_name = StringField('Organizer', validators=[Length(max=100)])
     submit = SubmitField('Create Event')
 
 class LoginForm(FlaskForm):

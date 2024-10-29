@@ -3,60 +3,73 @@
 {% from 'bootstrap5/form.html' import render_form %}
 
 {% block content %}
-
 <div class="container">  
+    <!-- Event Header Section -->
     <div class="row mt-5 mb-3">  
-      <div class="col-md-12">  
-        <div class="float-left">  
+      <div class="col-md-12 d-flex justify-content-between">  
+        <div>
           <h1 class="mb-0">{{ event.name }}</h1>  
-          <p>Upcoming Event</p>  
-        </div>  
- 
-        <div class="float-right text-right">  
+          <p class="text-muted">Upcoming Event</p>  
+        </div>
+        <div class="text-right">  
           <p class="mb-0">Event Date:</p>  
-          <h2 id="event-date">{{ event.event_date.strftime('%B %d, %Y') }}</h2>  <!-- Formatting the date -->
+          <h2 id="event-date">{{ event.event_date.strftime('%B %d, %Y') }}</h2>  
         </div>  
       </div>  
     </div>  
 
- 
- 
-        <!-- Destination --> 
-        <div class="row">  
-          <div class="col-md-12">  
-            <div class="card my-3">  
-              <div class="card-body">  
-                <div class="media">  
-                  <img class="align-self-start mr-3" src="{{ event.image }}">  
-                  <div class="media-body">  
-                    <small class="font-weight-bold text-muted">Stay 2 nights</small>  
-                    <h5 class="mt-0">{{ event.name }}</h5>  
-                    <p>{{ event.description }}</p>  
-                    <!--<a href="#" class="btn btn-danger">Book Now</a> -->
-                    {{ render_form(orderForm,"/events/{0}/order".format(event.id)) }}
-                  </div>  
-                </div>  
+    <!-- Event Details Section -->
+    <div class="row">  
+      <div class="col-md-12">  
+        <div class="card my-3">  
+          <div class="card-body">  
+            <div class="media">  
+              <img class="align-self-start mr-3 img-fluid" src="{{ event.image }}" alt="Event Image" style="width: 200px;">
+              <div class="media-body">  
+                <small class="font-weight-bold text-muted">Stay 2 nights</small>  
+                <h5 class="mt-0">{{ event.name }}</h5>  
+                <p>{{ event.description }}</p>  
+
+                <!-- Insert Category and Tickets Available Here -->
+                <p><strong>Category:</strong> {{ event.category }}</p>
+                <p><strong>Tickets Available:</strong> {{ event.ticketsAvailable }}</p>
+
+                <!-- Order Form for Booking Tickets -->
+                <div class="mt-3">
+                  {{ render_form(orderForm, "/events/{0}/order".format(event.id)) }}
+                </div>
               </div>  
             </div>  
           </div>  
-        </div>
-        <hr>
-        <!-- Comments -->  
-        <div class="row">  
-          <div class="col-md-12">  
-            <h2>Comments</h1>  
-          </div>  
         </div>  
-     
-        <div class="row border-bottom"> 
-          {{ render_form(form,"/events/{0}/comment".format(event.id)) }}
-          
-          {% for comment in event.comments %}
-          <div class="col-md-12">  
-            <b>{{ comment.user.name }} <span class="ml-2 text-muted">{{ comment.created_at }}</span></b>
-            <p>{{ comment.text }}</p>  
-          </div> 
-          {% endfor %} 
-        </div>  
+      </div>  
+    </div>
+
+    <hr>
+
+    <!-- Comments Section -->
+    <div class="row">  
+      <div class="col-md-12">  
+        <h2>Comments</h2>  
+      </div>  
+    </div>
+
+    <!-- Comment Form -->
+    <div class="row border-bottom mb-3">  
+      <div class="col-md-12">
+        {{ render_form(form, "/events/{0}/comment".format(event.id)) }}
       </div>
+    </div>
+
+    <!-- Display Existing Comments -->
+    <div class="row">
+      {% for comment in event.comments %}
+      <div class="col-md-12 mb-3">
+        <b>{{ comment.user.name }}</b> 
+        <span class="text-muted ml-2">{{ comment.created_at.strftime('%B %d, %Y %I:%M %p') }}</span>
+        <p>{{ comment.text }}</p>
+      </div>
+      {% endfor %}
+    </div>
+</div>
 {% endblock %}

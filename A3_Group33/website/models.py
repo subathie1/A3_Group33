@@ -25,6 +25,10 @@ class Event(db.Model):
     description = db.Column(db.String(500))
     event_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    price = db.Column(db.Numeric(precision=10, scale=2))
+    ticketsAvailable = db.Column(db.Integer, nullable=False, default=0)  # Default tickets
+    status = db.Column(db.String(20), default="Open", nullable=False)
+    category = db.Column(db.String(50), nullable=False)  # New category field
     image = db.Column(db.String(400))
     location = db.Column(db.String(200), nullable=False)
 
@@ -36,6 +40,7 @@ class Event(db.Model):
 
     def __repr__(self):
         return f"Event(Name: {self.name}, Date: {self.event_date})"
+
 
 class Booking(db.Model):
     __tablename__ = 'bookings'

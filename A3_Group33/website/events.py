@@ -14,6 +14,10 @@ def show(event_id):
     event = db.session.scalar(db.select(Event).where(Event.id == event_id))
     form = CommentForm()  # Create the comment form
     orderForm = OrderForm()
+
+    # Debugging: Ensure the category and tickets are available
+    print(event.category, event.ticketsAvailable)
+
     return render_template('events/show.html', event=event, form=form, orderForm=orderForm)
 
 @eventbp.route('/create', methods=['GET', 'POST'])
@@ -23,23 +27,33 @@ def create_event():
     if form.validate_on_submit():
         print("Form data is valid.")  # Debugging line
         db_upload_path = check_upload_file(form)
-        print(f"Image path: {db_upload_path}") 
+        print(f"Image path: {db_upload_path}")
 
+        # Default to 100 tickets if not provided
+        tickets_available = form.tickets_available.data or 100
+
+        # Create the event object with category and ticketsAvailable
         event = Event(
             name=form.name.data,
             event_date=form.event_date.data,
             location=form.location.data,
             description=form.description.data,
-            user_id=current_user.id,  # Ensure this references the current user
-            image =db_upload_path  # Use the path returned from check_upload_file
+            user_id=current_user.id,
+            image=db_upload_path,
+            ticketsAvailable=tickets_available,  # Tickets Available field
+            category=form.category.data,  # Category field
+            status='Open'  # Optional status
         )
+
         db.session.add(event)
         db.session.commit()
         flash('Event created successfully!', 'success')
         return redirect(url_for('events.show', event_id=event.id))
-    
+
     print("Form data is not valid.")  # Debugging line
     return render_template('create_event_wtforms.html', form=form)
+
+
 
 
 def check_upload_file(form):
