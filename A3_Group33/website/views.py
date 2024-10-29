@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from .models import Event
 from . import db
+from flask_login import login_required, current_user
 
 # Create the main blueprint
 main_bp = Blueprint('main', __name__)
@@ -30,5 +31,6 @@ def create_event():
     return render_template('create_event.html')
 
 @event_bp.route('/booking-history')
+@login_required
 def booking_history():
     return render_template('booking_history.html')

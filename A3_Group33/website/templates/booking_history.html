@@ -1,22 +1,23 @@
 {% extends 'base.html' %}
 
-{% block title %}Booking History{% endblock %} <!-- Block Stopper: title -->
+{% block title %}Booking History{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-  <h2 class="text-center mb-4">Your Booking History</h2>
-  <div class="list-group">
-    <a href="#" class="list-group-item list-group-item-action">
-      <h5 class="mb-1">Listen Out 2024</h5>
-      <p class="mb-1">June 5th, 2024 - Brisbane Showgrounds</p>
-      <small class="text-muted">Booked 2 weeks ago</small>
-    </a>
-    <a href="#" class="list-group-item list-group-item-action">
-      <h5 class="mb-1">Promiseland 2024</h5>
-      <p class="mb-1">October 12th, 2024 - Gold Coast</p>
-      <small class="text-muted">Booked 1 month ago</small>
-    </a>
-  </div>
+  <h2>Your Booking History</h2>
+
+  {% if events %}
+    <ul class="list-group">
+      {% for event in events %}
+        <li class="list-group-item">
+          <h5>{{ event.name }}</h5>
+          <p><strong>Date:</strong> {{ event.event_date.strftime('%B %d, %Y') }}</p>
+          <p><strong>Location:</strong> {{ event.location }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You have no bookings yet.</p>
+  {% endif %}
 </div>
 {% endblock %}
-<!-- Block Stopper: content -->
