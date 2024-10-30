@@ -11,7 +11,7 @@ class EventForm(FlaskForm):
     location = StringField('Location', validators=[InputRequired(), Length(max=100)])
     description = TextAreaField('Description', 
             validators=[InputRequired()])
-    tickets_available = IntegerField('Tickets Available', default=100)  # Add field with default value
+    tickets_available = IntegerField('Tickets Available', default=1)  
     category = SelectField('Select Category', validators=[InputRequired()], choices=[
 		('Hip Hop', 'Hip Hop'),
 		('Rap', 'Rap'),
@@ -23,6 +23,11 @@ class EventForm(FlaskForm):
 		('Country', 'Country'),
 		('Classical', 'Classical'),
 		('Other', 'Other')
+		])
+    status = SelectField('Select Status', validators=[InputRequired()], choices=[
+		('Open', 'Open'),
+		('Sold Out', 'Sold Out'),
+		('Cancelled', 'Cancelled'),
 		])
     image = FileField('Event Image', validators=[
     FileRequired(message='Image cannot be empty'),

@@ -4,9 +4,9 @@
 
 {% block content %}
 <div class="container mt-5">
-    <!-- Carousel -->
+    <!-- Carousel Section -->
     <div class="row justify-content-center mb-5">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
@@ -26,48 +26,87 @@
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 </button>
             </div>
+        </div>
+    </div>
             <div class="d-grid gap-2 d-md-block" style="position: relative; top: -50px; left: 10px;">
               <button class="btn btn-warning">Take me to my next event</button>
             </div>
         </div>
     </div>
 
-    
-    <!-- Genre Section -->
-    <div class="card mb-5">
-        <h5 class="card-header">Pick Your Genre</h5>
-        <div class="card-body">
-            <div class="row text-center">
-                <div class="col-md-3">
-                    <div class="genre-circle">
-                        <img src="https://cdn-icons-png.flaticon.com/128/873/873299.png" alt="Pop">
-                    </div>
-                    <div class="genre-title">Pop</div>
-                </div>
-                <div class="col-md-3">
-                    <div class="genre-circle">
-                        <img src="https://cdn-icons-png.flaticon.com/128/461/461238.png" alt="Hip Hop">
-                    </div>
-                    <div class="genre-title">Hip Hop</div>
-                </div>
-                <div class="col-md-3">
-                    <div class="genre-circle">
-                        <img src="https://cdn-icons-png.flaticon.com/128/4781/4781401.png" alt="Rock">
-                    </div>
-                    <div class="genre-title">Rock</div>
-                </div>
-                <div class="col-md-3">
-                    <div class="genre-circle">
-                        <img src="https://cdn-icons-png.flaticon.com/128/3921/3921439.png" alt="Jazz">
-                    </div>
-                    <div class="genre-title">Jazz</div>
-                </div>
-            </div>
-            <div class="d-grid gap-2 d-md-block mt-3">
-                <a href="#" class="btn btn-warning">Explore more options</a>
-            </div>
+    <!-- Category Buttons Section -->
+    <div class="row p-3 shadow bg-light rounded mb-4" id="categories">
+        <div class="col text-center">
+            <a class="btn btn-outline-dark mx-2" href="{{ url_for('main.index') }}#categories">All</a>
+            {% for category in categories %}
+                <a class="btn btn-outline-dark mx-2" href="{{ url_for('main.category_view', category=category) }}#categories">
+                    {{ category }}
+                </a>
+            {% endfor %}
         </div>
     </div>
+    
+       <!-- Event Cards Section -->
+    <div class="row gx-4 gy-4">
+        {% for event in events %}
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="card h-100 shadow-sm">
+                <img src="{{ event.image }}" class="card-img-top" alt="{{ event.name }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ event.name }}</h5>
+                    <p class="card-text">
+                        {{ event.event_date.strftime('%B %d, %Y') }}<br>
+                        {{ event.location }}<br>
+                        ${{ event.price }} per person
+                    </p>
+                    <div class="mt-auto">
+                        <a href="{{ url_for('main.event_view', id=event.id) }}" class="btn btn-primary w-100">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    
+  <!-- Genre Section -->
+  <div class="card mb-5">
+    <h5 class="card-header">Pick Your Genre</h5>
+    <div class="card-body">
+        <div class="row text-center">
+            <div class="col-md-3">
+                <div class="genre-circle">
+                    <img src="https://cdn-icons-png.flaticon.com/128/873/873299.png" alt="Pop">
+                </div>
+                <div class="genre-title">Pop</div>
+            </div>
+            <div class="col-md-3">
+                <div class="genre-circle">
+                    <img src="https://cdn-icons-png.flaticon.com/128/461/461238.png" alt="Hip Hop">
+                </div>
+                <div class="genre-title">Hip Hop</div>
+            </div>
+            <div class="col-md-3">
+                <div class="genre-circle">
+                    <img src="https://cdn-icons-png.flaticon.com/128/4781/4781401.png" alt="Rock">
+                </div>
+                <div class="genre-title">Rock</div>
+            </div>
+            <div class="col-md-3">
+                <div class="genre-circle">
+                    <img src="https://cdn-icons-png.flaticon.com/128/3921/3921439.png" alt="Jazz">
+                </div>
+                <div class="genre-title">Jazz</div>
+            </div>
+        </div>
+        <div class="d-grid gap-2 d-md-block mt-3">
+            <a href="#" class="btn btn-warning">Explore more options</a>
+        </div>
+    </div>
+</div>
+
 
     <div class="card mt-5">
         <h5 class="card-header">Actual Festivals</h5>
@@ -76,13 +115,25 @@
                 {% for event in events %}
                 <div class="col col-md-6 col-lg-3">
                     <div class="card small-card h-100">
-                        <img src="{{ event.image }}">
+                        <img src="{{ event.image }}" class="card-img-top" alt="{{ event.name }}">
                         <div class="card-body">
-                            <h5 class="card-title">{{event.name}}</h5>
-                            <div class="progress-bar progress-bar-striped bg-success">Open</div>
-                            <p class="card-text">{{event.description}}</p>
+                            <h5 class="card-title">{{ event.name }}</h5>
+    
+                            <!-- Status Badge with Dynamic Color -->
+                            <span class="badge 
+                                {% if event.status == 'Open' %} bg-success
+                                {% elif event.status == 'Inactive' %} bg-secondary
+                                {% elif event.status == 'Sold Out' %} bg-danger
+                                {% elif event.status == 'Cancelled' %} bg-secondary
+                                {% endif %}">
+                                {{ event.status }}
+                            </span>
+    
+                            <p class="card-text mt-2">{{ event.description }}</p>
                             <div class="d-flex justify-content-center">
-                                <a href="{{ url_for('events.show', event_id=event.id) }}" class="btn btn-primary mx-2">View Details</a>
+                                <a href="{{ url_for('events.show', event_id=event.id) }}" class="btn btn-primary mx-2">
+                                    View Details
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -91,6 +142,7 @@
             </div>
         </div>
     </div>
+    
     
     <!-- Most Popular Festivals Section -->
     <div class="card mt-5">
@@ -208,23 +260,21 @@
         </div>
     </div>
 
-    <!-- FAQ Section -->
-    <div class="container mt-5">
-        <h2>Frequently Asked Questions</h2>
-        <div class="accordion" id="faqAccordion">
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="faqHeadingOne">
-                    <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#faqCollapseOne" aria-expanded="true">
-                        How do I purchase tickets?
-                    </button>
-                </h2>
-                <div id="faqCollapseOne" class="accordion-collapse collapse show">
-                    <div class="accordion-body">
-                        You can purchase tickets by clicking the "Book Tickets" button on the festival page.
-                    </div>
-                </div>
+   <!-- FAQ Section -->
+   <div class="accordion my-5" id="faqAccordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="faqHeadingOne">
+            <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#faqCollapseOne" aria-expanded="true">
+                How do I purchase tickets?
+            </button>
+        </h2>
+        <div id="faqCollapseOne" class="accordion-collapse collapse show">
+            <div class="accordion-body">
+                You can purchase tickets by clicking the "Book Tickets" button on the event page.
             </div>
         </div>
     </div>
+</div>
+
 </div>
 {% endblock %}
