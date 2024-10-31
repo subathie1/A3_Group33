@@ -1,23 +1,31 @@
 {% extends 'base.html' %}
 
-{% block title %}Booking History{% endblock %}
-
 {% block content %}
 <div class="container mt-5">
-  <h2>Your Booking History</h2>
-
-  {% if events %}
-    <ul class="list-group">
-      {% for event in events %}
-        <li class="list-group-item">
-          <h5>{{ event.name }}</h5>
-          <p><strong>Date:</strong> {{ event.event_date.strftime('%B %d, %Y') }}</p>
-          <p><strong>Location:</strong> {{ event.location }}</p>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>You have no bookings yet.</p>
-  {% endif %}
+    <h1>Your Booking History</h1>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Event Name</th>
+                <th>Quantity</th>
+                <th>Ticket Type</th>
+                <th>Order Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.event.name }}</td>
+                <td>{{ order.quantity }}</td>
+                <td>{{ order.ticket_type }}</td>
+                <td>{{ order.order_date.strftime('%B %d, %Y') }}</td>
+                <td>{{ order.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Booking Confirmation</h1>
+    <p>Thank you for your order! Here are your booking details:</p>
+    <ul>
+        <li><strong>Order ID:</strong> {{ order.id }}</li>
+        <li><strong>Event:</strong> {{ order.event.name }}</li>
+        <li><strong>Quantity:</strong> {{ order.quantity }}</li>
+        <li><strong>Ticket Type:</strong> {{ order.ticket_type }}</li>
+        <li><strong>Order Date:</strong> {{ order.order_date.strftime('%B %d, %Y') }}</li>
+    </ul>
+    <a href="{{ url_for('event.booking_history') }}" class="btn btn-primary mt-3">View Booking History</a>
+</div>
+{% endblock %}

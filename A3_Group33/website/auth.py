@@ -16,7 +16,9 @@ def register():
         # Get username, password, and email from the form
         uname = form.user_name.data
         pwd = form.password.data
-        email = form.email_id.data  # Adjusted to match form field names
+        email = form.email_id.data
+        street = form.street_name.data
+        contact = form.contact_number.data
         
         # Check if a user exists
         user = db.session.scalar(db.select(User).where(User.name == uname))
@@ -28,7 +30,8 @@ def register():
         pwd_hash = generate_password_hash(pwd)
         
         # Create a new User model object
-        new_user = User(name=uname, password_hash=pwd_hash, emailid=email)
+        new_user = User(name=uname, password_hash=pwd_hash, emailid=email, street_name=street,
+            contact_number=contact)
         db.session.add(new_user)
         db.session.commit()  # Commit to the database
         

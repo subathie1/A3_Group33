@@ -43,6 +43,8 @@ class RegisterForm(FlaskForm):
     user_name = StringField("User Name", validators=[InputRequired()])
     email_id = StringField("Email Address", validators=[Email("Please enter a valid email")])
     password = PasswordField("Password", validators=[InputRequired(), EqualTo('confirm', message="Passwords should match")])
+    street_name = StringField('Street Name', validators=[InputRequired(), Length(max=50)])
+    contact_number = StringField('Contact Number', validators=[InputRequired(), Length(min=10, max=15)])
     confirm = PasswordField("Confirm Password")
     submit = SubmitField("Register")
 
@@ -51,7 +53,15 @@ class CommentForm(FlaskForm):
     submit = SubmitField('Create')
 
 class OrderForm(FlaskForm):
-    quantity = IntegerField('Quantity', validators=[InputRequired(), NumberRange(min=1, message="Must be at least 1")])
+    quantity = IntegerField(
+        'Number of Tickets', 
+        validators=[InputRequired(), NumberRange(min=1)],
+        render_kw={"placeholder": "Enter number of tickets"}
+    )
+    ticket_type = SelectField('Select Status', validators=[InputRequired()], choices=[
+		('General Admission', 'General Admission'),
+		('VIP', 'VIP'),
+		])
     submit = SubmitField('Place Order')
 
 class UploadForm(FlaskForm):

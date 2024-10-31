@@ -8,6 +8,8 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(100), index=True, unique=True, nullable=False)
     emailid = db.Column(db.String(100), index=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
+    street_name = db.Column(db.String(150), nullable=False)
+    contact_number = db.Column(db.String(15), nullable=False)
 
     # Relationships
     comments = db.relationship('Comment', back_populates='user', lazy='dynamic')
@@ -79,6 +81,7 @@ class Order(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     order_date = db.Column(db.DateTime, default=datetime.now)
     status = db.Column(db.String(50), default='pending')
+    ticket_type = db.Column(db.String(50), nullable=False)  # New field for ticket type
 
     # Relationships
     user = db.relationship('User', back_populates='orders')

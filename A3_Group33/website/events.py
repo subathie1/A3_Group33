@@ -83,6 +83,7 @@ def create_order(event_id):
     if form.validate_on_submit():
         order = Order(
             quantity=form.quantity.data,
+            ticket_type=form.ticket_type.data,
             user_id=current_user.id, 
             event_id=event.id
         )
@@ -91,13 +92,21 @@ def create_order(event_id):
         flash('Order posted!', 'success')
     return redirect(url_for('events.booking_history'))  # Redirect to booking history
 
-
-
-
 @eventbp.route('/history')
 @login_required
 def booking_history():
-    return render_template('booking_history.html')
+    orders = Order.query.filter_by(user_id=current_user.id).all()
+
+    # Debugging: Print the order details to verify
+    for order in orders:
+        print(f"Order ID: {order.id}, Event: {order.event.name}, Quantity: {order.quantity}")
+
+    if not orders:
+        flash('No bookings found.', 'warning')
+        return redirect(url_for('main.index'))
+
+    return render_template('booking_history.html', orders=orders)
+
 
 @eventbp.route('/save', methods=['POST'])
 @login_required

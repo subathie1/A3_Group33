@@ -48,6 +48,10 @@ def create_app():
     @app.errorhandler(404)
     def not_found(e):
         return render_template("404.html", error="Page not found"), 404
+    
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        return render_template('500.html', error="An unexpected error occurred on the server"), 500
 
     @app.context_processor
     def get_context():

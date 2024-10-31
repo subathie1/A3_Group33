@@ -1,32 +1,32 @@
 {% extends 'base.html' %}
-
 {% from 'bootstrap5/form.html' import render_form %}
 
 {% block content %}
 <div class="container mt-5">
     <!-- Event Header Section -->
-    <div class="row mb-4">
+    <div class="row mb-5 align-items-center">
         <div class="col-md-8">
-            <h1 class="display-4">{{ event.name }}</h1>
-            <p class="text-muted lead">Explore our upcoming event!</p>
+            <h1 class="display-4 fw-bold">{{ event.name }}</h1>
+            <p class="text-muted fs-5">Explore our upcoming event and join the fun!</p>
         </div>
-        <div class="col-md-4 text-end">
-            <p class="mb-1 text-muted">Event Date:</p>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <p class="text-muted mb-1">Event Date:</p>
             <h3 class="fw-bold">{{ event.event_date.strftime('%B %d, %Y') }}</h3>
         </div>
     </div>
 
     <!-- Event Details Section -->
-    <div class="row">
+    <div class="row gx-5">
+        <!-- Left Section -->
         <div class="col-lg-8">
-            <div class="card shadow-sm mb-4">
-                <img src="{{ event.image }}" class="card-img-top rounded" alt="{{ event.name }}">
+            <div class="card shadow-sm rounded-4 mb-4 overflow-hidden">
+                <img src="{{ event.image }}" class="card-img-top" alt="{{ event.name }}" style="height: 350px; object-fit: cover;">
                 <div class="card-body">
-                    <h5 class="card-title mb-3">{{ event.name }}</h5>
-                    <p class="card-text">{{ event.description }}</p>
+                    <h5 class="card-title mb-3 fw-semibold">{{ event.name }}</h5>
+                    <p class="card-text fs-5 text-muted">{{ event.description }}</p>
 
                     <div class="d-flex justify-content-between align-items-center mt-4">
-                        <!-- Status with Dynamic Badge Color -->
+                        <!-- Status Badge -->
                         <p class="mb-0">
                             <strong>Status: </strong> 
                             <span class="badge 
@@ -39,17 +39,21 @@
                             </span>
                         </p>
 
-                        <!-- Category and Tickets Available -->
-                        <p class="mb-0"><strong>Category:</strong> {{ event.category }}</p>
-                        <p class="mb-0"><strong>Tickets Available:</strong> {{ event.ticketsAvailable }}</p>
+                        <!-- Category and Ticket Info -->
+                        <p class="mb-0">
+                            <strong>Category:</strong> {{ event.category }}
+                        </p>
+                        <p class="mb-0">
+                            <strong>Tickets Available:</strong> {{ event.ticketsAvailable }}
+                        </p>
                     </div>
                 </div>
             </div>
 
             <!-- Comment Section -->
-            <div class="card shadow-sm">
-                <div class="card-header">
-                    <h4>Comments</h4>
+            <div class="card shadow-sm rounded-4">
+                <div class="card-header bg-white border-bottom-0">
+                    <h4 class="fw-semibold">Comments</h4>
                 </div>
                 <div class="card-body">
                     <!-- Comment Form -->
@@ -58,29 +62,33 @@
                     </div>
 
                     <!-- Display Existing Comments -->
-                    <div>
-                        {% for comment in event.comments %}
-                        <div class="d-flex mb-3 align-items-start">
-                            <div class="me-3">
-                                <img src="https://via.placeholder.com/50" class="rounded-circle" alt="User Profile">
+                    {% if event.comments %}
+                        <div class="comment-list">
+                            {% for comment in event.comments %}
+                            <div class="d-flex mb-3 align-items-start">
+                                <div class="me-3">
+                                    <img src="https://via.placeholder.com/50" class="rounded-circle" alt="User Profile">
+                                </div>
+                                <div>
+                                    <b>{{ comment.user.name }}</b>
+                                    <span class="text-muted small ms-2">{{ comment.created_at.strftime('%B %d, %Y %I:%M %p') }}</span>
+                                    <p class="mb-0 text-muted">{{ comment.text }}</p>
+                                </div>
                             </div>
-                            <div>
-                                <b>{{ comment.user.name }}</b>
-                                <span class="text-muted small ms-2">{{ comment.created_at.strftime('%B %d, %Y %I:%M %p') }}</span>
-                                <p class="mb-0">{{ comment.text }}</p>
-                            </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
-                    </div>
+                    {% else %}
+                        <p class="text-muted">No comments yet. Be the first to share your thoughts!</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
 
         <!-- Order Form Section -->
         <div class="col-lg-4">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm rounded-4">
                 <div class="card-body">
-                    <h4 class="card-title mb-4">Book Your Tickets</h4>
+                    <h4 class="card-title fw-semibold mb-4">Book Your Tickets</h4>
                     {{ render_form(orderForm, "/events/{0}/order".format(event.id)) }}
                 </div>
             </div>

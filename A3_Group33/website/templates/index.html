@@ -28,39 +28,44 @@
             </div>
         </div>
     </div>
-            <div class="d-grid gap-2 d-md-block" style="position: relative; top: -50px; left: 10px;">
-              <button class="btn btn-warning">Take me to my next event</button>
-            </div>
-        </div>
-    </div>
 
-    <!-- Category Buttons Section -->
+    <!-- Category Filter Buttons -->
     <div class="row p-3 shadow bg-light rounded mb-4" id="categories">
         <div class="col text-center">
             <a class="btn btn-outline-dark mx-2" href="{{ url_for('main.index') }}#categories">All</a>
-            {% for category in categories %}
-                <a class="btn btn-outline-dark mx-2" href="{{ url_for('main.category_view', category=category) }}#categories">
-                    {{ category }}
-                </a>
+                    {% for category in categories %}
+                <a class="btn btn-outline-dark mx-2" href="{{ url_for('main.category_view', category=category) }}#categories">{{ category }}</a>
             {% endfor %}
         </div>
     </div>
+
     
-       <!-- Event Cards Section -->
-    <div class="row gx-4 gy-4">
+    </div><!-- Event Cards Section -->
+    <div class="row gx-4 gy-5">
         {% for event in events %}
         <div class="col-lg-3 col-md-4 col-sm-6">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ event.image }}" class="card-img-top" alt="{{ event.name }}">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">{{ event.name }}</h5>
-                    <p class="card-text">
-                        {{ event.event_date.strftime('%B %d, %Y') }}<br>
-                        {{ event.location }}<br>
-                        ${{ event.price }} per person
+            <div class="card h-100 shadow-sm rounded-4 border-0 overflow-hidden position-relative">
+                <div class="img-container position-relative">
+                    <img src="{{ event.image }}" class="card-img-top" alt="{{ event.name }}" style="object-fit: cover; height: 200px;">
+                    <span class="badge position-absolute top-0 start-0 m-3 px-3 py-2 rounded-pill 
+                        {% if event.status == 'Open' %} bg-success
+                        {% elif event.status == 'Inactive' %} bg-secondary
+                        {% elif event.status == 'Sold Out' %} bg-danger
+                        {% elif event.status == 'Cancelled' %} bg-dark 
+                        {% endif %}">
+                        {{ event.status }}
+                    </span>
+                </div>
+                <div class="card-body d-flex flex-column p-4">
+                    <h5 class="card-title mb-3 text-center">{{ event.name }}</h5>
+                    <p class="card-text text-muted text-center mb-4">
+                        <i class="bi bi-calendar3"></i> {{ event.event_date.strftime('%B %d, %Y') }}<br>
+                        <i class="bi bi-geo-alt"></i> {{ event.location }}<br>
+                        <i class="bi bi-currency-dollar"></i> {{ event.price }} per person
                     </p>
-                    <div class="mt-auto">
-                        <a href="{{ url_for('main.event_view', id=event.id) }}" class="btn btn-primary w-100">
+                    <div class="d-flex justify-content-center mt-auto">
+                        <a href="{{ url_for('events.show', event_id=event.id) }}" 
+                           class="btn btn-outline-primary w-75 py-2 rounded-pill shadow-sm">
                             View Details
                         </a>
                     </div>
@@ -69,82 +74,9 @@
         </div>
         {% endfor %}
     </div>
+    
 
-    
-  <!-- Genre Section -->
-  <div class="card mb-5">
-    <h5 class="card-header">Pick Your Genre</h5>
-    <div class="card-body">
-        <div class="row text-center">
-            <div class="col-md-3">
-                <div class="genre-circle">
-                    <img src="https://cdn-icons-png.flaticon.com/128/873/873299.png" alt="Pop">
-                </div>
-                <div class="genre-title">Pop</div>
-            </div>
-            <div class="col-md-3">
-                <div class="genre-circle">
-                    <img src="https://cdn-icons-png.flaticon.com/128/461/461238.png" alt="Hip Hop">
-                </div>
-                <div class="genre-title">Hip Hop</div>
-            </div>
-            <div class="col-md-3">
-                <div class="genre-circle">
-                    <img src="https://cdn-icons-png.flaticon.com/128/4781/4781401.png" alt="Rock">
-                </div>
-                <div class="genre-title">Rock</div>
-            </div>
-            <div class="col-md-3">
-                <div class="genre-circle">
-                    <img src="https://cdn-icons-png.flaticon.com/128/3921/3921439.png" alt="Jazz">
-                </div>
-                <div class="genre-title">Jazz</div>
-            </div>
-        </div>
-        <div class="d-grid gap-2 d-md-block mt-3">
-            <a href="#" class="btn btn-warning">Explore more options</a>
-        </div>
-    </div>
-</div>
-
-
-    <div class="card mt-5">
-        <h5 class="card-header">Actual Festivals</h5>
-        <div class="card-body">
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                {% for event in events %}
-                <div class="col col-md-6 col-lg-3">
-                    <div class="card small-card h-100">
-                        <img src="{{ event.image }}" class="card-img-top" alt="{{ event.name }}">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ event.name }}</h5>
-    
-                            <!-- Status Badge with Dynamic Color -->
-                            <span class="badge 
-                                {% if event.status == 'Open' %} bg-success
-                                {% elif event.status == 'Inactive' %} bg-secondary
-                                {% elif event.status == 'Sold Out' %} bg-danger
-                                {% elif event.status == 'Cancelled' %} bg-secondary
-                                {% endif %}">
-                                {{ event.status }}
-                            </span>
-    
-                            <p class="card-text mt-2">{{ event.description }}</p>
-                            <div class="d-flex justify-content-center">
-                                <a href="{{ url_for('events.show', event_id=event.id) }}" class="btn btn-primary mx-2">
-                                    View Details
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-    
-    
-    <!-- Most Popular Festivals Section -->
+    <!-- Popular Festivals Section -->
     <div class="card mt-5">
         <h5 class="card-header">Most Popular Festivals</h5>
         <div class="card-body">
@@ -165,13 +97,13 @@
                 </div>
                 <div class="col">
                     <div class="card small-card h-100">
-                        <img src="https://ridetheg.com.au/wp-content/uploads/2022/06/Promiseland.jpg" class="card-img-top" alt="Promiseland ">
+                        <img src="https://ridetheg.com.au/wp-content/uploads/2022/06/Promiseland.jpg" class="card-img-top" alt="Promiseland">
                         <span class="badge text-bg-danger">Sold Out</span>
                         <div class="card-body">
                             <h5 class="card-title">Promiseland 2024</h5>
-                            <p class="card-text">Some quick example text to build on the artist's name.</p>
-                            <div class="mt-auto d-flex justify-content-center">
-                                <a href="" class="btn btn-primary mx-2">View Details</a>
+                            <p class="card-text">A brief description of the festival.</p>
+                            <div class="d-flex justify-content-center">
+                                <a class="btn btn-primary mx-2">View Details</a>
                             </div>
                         </div>
                     </div>
@@ -182,9 +114,9 @@
                         <span class="badge text-bg-secondary">Inactive</span>
                         <div class="card-body">
                             <h5 class="card-title">Spilt Milk 2024</h5>
-                            <p class="card-text">Some quick example text to build on the artist's name.</p>
-                            <div class="mt-auto d-flex justify-content-center">
-                                <a href="#" class="btn btn-primary mx-2">View Details</a>
+                            <p class="card-text">Some more details about this event.</p>
+                            <div class="d-flex justify-content-center">
+                                <a class="btn btn-primary mx-2">View Details</a>
                             </div>
                         </div>
                     </div>
@@ -192,89 +124,87 @@
             </div>
         </div>
     </div>
-
-
-    <!-- Posts by Fellow Festival Goers -->
-    <div class="card mt-5">
-        <h5 class="card-header">Posts by fellow festival goers</h5>
-        <div class="card-body">
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                <div class="col">
-                    <div class="card h-100">
-                        <img src="https://cdn.concreteplayground.com/content/uploads/2023/06/splendour-in-the-grass-credit-StephenBooth.jpg" class="card-img-top" alt="Post 1">
-                        <div class="card-body">
-                            <h5 class="card-title">Splendour in the Grass 2024</h5>
-                            <a href="#">@user123abc</a>
-                            <p class="card-text">A quick post about the festival experience.</p>
-                            <img src="https://cdn-icons-png.flaticon.com/128/992/992000.png" class="star-rating-img" alt="Rating">
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">Posted 4 minutes ago</small>
-                            <button class="btn btn-primary float-end">View Post</button>
-                        </div>
+ <!-- Posts by Fellow Festival Goers -->
+ <div class="card mt-5">
+    <h5 class="card-header">Posts by fellow festival goers</h5>
+    <div class="card-body">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100">
+                    <img src="https://cdn.concreteplayground.com/content/uploads/2023/06/splendour-in-the-grass-credit-StephenBooth.jpg" class="card-img-top" alt="Post 1">
+                    <div class="card-body">
+                        <h5 class="card-title">Splendour in the Grass 2024</h5>
+                        <a href="#">@user123abc</a>
+                        <p class="card-text">A quick post about the festival experience.</p>
+                        <img src="https://cdn-icons-png.flaticon.com/128/992/992000.png" class="star-rating-img" alt="Rating">
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">Posted 4 minutes ago</small>
+                        <button class="btn btn-primary float-end">View Post</button>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="card h-100">
-                        <img src="https://content.api.news/v3/images/bin/afa1bdbf87fc758efb318f833a44f13b" class="card-img-top" alt="User Post-1">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="card-title mb-0">Byron Bay Bluesfest 2024</h5>
-                                <a href="#">@user678edf</a>
-                            </div>        
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <img src="https://cdn-icons-png.flaticon.com/128/992/992000.png" style="width: 70px; height: 70px;" alt="star rating">
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-body-secondary">Posted 4 hours ago</small>
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <button type="button" class="btn btn-primary" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; position: relative; top: -20px;">
-                                    View Post
-                                </button>
-                            </div>
-                        </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="https://content.api.news/v3/images/bin/afa1bdbf87fc758efb318f833a44f13b" class="card-img-top" alt="User Post-1">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Byron Bay Bluesfest 2024</h5>
+                            <a href="#">@user678edf</a>
+                        </div>        
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        <img src="https://cdn-icons-png.flaticon.com/128/992/992000.png" style="width: 70px; height: 70px;" alt="star rating">
                     </div>
-                </div>
-                <div class="col">
-                    <div class="card h-100">
-                        <img src="https://images-r2.thebrag.com/rs/uploads/2020/05/falls.jpg" class="card-img-top" alt="User Post-1">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="card-title mb-0">Falls Festival 2024</h5>
-                                <a href="#">@user792mfg</a>
-                            </div>        
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <img src="https://cdn-icons-png.flaticon.com/128/991/991999.png" style="width: 70px; height: 70px;" alt="star rating">
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-body-secondary">Posted 10 hours ago</small>
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <button type="button" class="btn btn-primary" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; position: relative; top: -20px;">
-                                    View Post
-                                </button>
-                            </div>
+                    <div class="card-footer">
+                        <small class="text-body-secondary">Posted 4 hours ago</small>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="button" class="btn btn-primary" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; position: relative; top: -20px;">
+                                View Post
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-   <!-- FAQ Section -->
-   <div class="accordion my-5" id="faqAccordion">
-    <div class="accordion-item">
-        <h2 class="accordion-header" id="faqHeadingOne">
-            <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#faqCollapseOne" aria-expanded="true">
-                How do I purchase tickets?
-            </button>
-        </h2>
-        <div id="faqCollapseOne" class="accordion-collapse collapse show">
-            <div class="accordion-body">
-                You can purchase tickets by clicking the "Book Tickets" button on the event page.
+            <div class="col">
+                <div class="card h-100">
+                    <img src="https://images-r2.thebrag.com/rs/uploads/2020/05/falls.jpg" class="card-img-top" alt="User Post-1">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Falls Festival 2024</h5>
+                            <a href="#">@user792mfg</a>
+                        </div>        
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        <img src="https://cdn-icons-png.flaticon.com/128/991/991999.png" style="width: 70px; height: 70px;" alt="star rating">
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-body-secondary">Posted 10 hours ago</small>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="button" class="btn btn-primary" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; position: relative; top: -20px;">
+                                View Post
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+    <!-- FAQ Section -->
+    <div class="accordion my-5" id="faqAccordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="faqHeadingOne">
+                <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#faqCollapseOne" aria-expanded="true">
+                    How do I purchase tickets?
+                </button>
+            </h2>
+            <div id="faqCollapseOne" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                    You can purchase tickets by clicking the "Book Tickets" button on the event page.
+                </div>
+            </div>
+        </div>
+    </div>
+    
 </div>
 {% endblock %}

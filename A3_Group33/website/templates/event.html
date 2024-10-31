@@ -17,7 +17,6 @@
                 <h1 class="display-5">{{ event.title }}</h1>
 
                 <div class="row p-3">
-                    <h4 class="text-success">${{ event.price }} ea.</h4>
                     <span class="badge 
                         {% if event.status == 'Open' %} bg-success 
                         {% elif event.status == 'Sold Out' %} bg-danger 

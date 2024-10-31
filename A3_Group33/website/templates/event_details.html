@@ -10,22 +10,29 @@
   <p><strong>Venue:</strong> {{ event.location }}</p>  <!-- Dynamic Event Location -->
   <p class="lead">{{ event.description }}</p>  <!-- Dynamic Event Description -->
 
-  <div class="card mt-4">
-    <div class="card-body">
-      <h4 class="card-title">Book Your Tickets</h4>
-      <form method="POST" action="{{ url_for('events.book_tickets', event_id=event.id) }}">  <!-- Assume a route for booking tickets -->
-        <div class="mb-3">
-          <label for="ticketType" class="form-label">Ticket Type</label>
-          <select class="form-select" name="ticket_type" id="ticketType">
-            <option value="general" selected>General Admission - $50</option>
-            <option value="vip">VIP - $100</option>
-          </select>
+  <div class="col-lg-4">
+    <div class="card shadow-sm rounded-4">
+        <div class="card-body">
+            <h4 class="card-title fw-semibold mb-4">Book Your Tickets</h4>
+            <form method="POST" action="{{ url_for('event.order_event', event_id=event.id) }}">
+                {{ form.hidden_tag() }}
+
+                <div class="mb-3">
+                    {{ form.quantity.label(class_="form-label") }}
+                    {{ form.quantity(class_="form-control") }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.ticket_type.label(class_="form-label") }}
+                    {{ form.ticket_type(class_="form-select") }}
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">{{ form.submit.label }}</button>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary">Book Now</button>
-      </form>
     </div>
-  </div>
 </div>
+
 
 <div class="container mt-5">
   <h1 class="display-5">{{ event.name }}</h1>
