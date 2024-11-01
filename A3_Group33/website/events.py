@@ -21,8 +21,6 @@ def show(event_id):
 def create_event():
     form = EventForm()
     if form.validate_on_submit():
-        print(f"Category Selected: {form.category.data}")  # Debugging
-
         event = Event(
             name=form.name.data,
             description=form.description.data,
@@ -32,7 +30,8 @@ def create_event():
             user_id=current_user.id,
             image=check_upload_file(form),
             status=form.status.data,
-            ticketsAvailable=form.tickets_available.data
+            ticketsAvailable=form.tickets_available.data,
+            price=form.price.data  # Set price from form data
         )
         db.session.add(event)
         db.session.commit()
@@ -40,8 +39,6 @@ def create_event():
         return redirect(url_for('events.show', event_id=event.id))
 
     return render_template('create_event_wtforms.html', form=form)
-
-
 
 def check_upload_file(form):
     # Get file data from form
@@ -56,7 +53,6 @@ def check_upload_file(form):
     # Save the file and return the db upload path
     fp.save(upload_path)
     return db_upload_path
-
 
 @eventbp.route('/<int:event_id>/comment', methods=['POST'])
 @login_required
@@ -74,7 +70,6 @@ def post_comment(event_id):
         flash('Comment posted!', 'success')
     return redirect(url_for('events.show', event_id=event.id))  # Redirect to the event show route
 
-
 @eventbp.route('/<int:event_id>/order', methods=['POST'])
 @login_required
 def create_order(event_id):
@@ -85,11 +80,19 @@ def create_order(event_id):
             quantity=form.quantity.data,
             ticket_type=form.ticket_type.data,
             user_id=current_user.id, 
-            event_id=event.id
+            event_id=event.id,
+            price=event.price  # Use event's price for the order
         )
-        db.session.add(order)
-        db.session.commit()
-        flash('Order posted!', 'success')
+        event.ticketsAvailable -= form.quantity.data  # Reduce available tickets
+
+        try:
+            db.session.add(order)
+            db.session.commit()
+            flash('Order placed successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'An error occurred: {str(e)}', 'danger')
+
     return redirect(url_for('events.booking_history'))  # Redirect to booking history
 
 @eventbp.route('/history')
@@ -106,7 +109,6 @@ def booking_history():
         return redirect(url_for('main.index'))
 
     return render_template('booking_history.html', orders=orders)
-
 
 @eventbp.route('/save', methods=['POST'])
 @login_required

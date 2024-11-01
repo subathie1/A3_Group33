@@ -10,6 +10,7 @@
                 <th>Event Name</th>
                 <th>Quantity</th>
                 <th>Ticket Type</th>
+                <th>Total Price</th>        
                 <th>Order Date</th>
                 <th>Status</th>
             </tr>
@@ -21,6 +22,7 @@
                 <td>{{ order.event.name }}</td>
                 <td>{{ order.quantity }}</td>
                 <td>{{ order.ticket_type }}</td>
+                <td>${{ order.quantity * order.price }}</td>  <!-- Calculate and display total price -->
                 <td>{{ order.order_date.strftime('%B %d, %Y') }}</td>
                 <td>{{ order.status }}</td>
             </tr>

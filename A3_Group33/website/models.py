@@ -14,7 +14,6 @@ class User(db.Model, UserMixin):
     # Relationships
     comments = db.relationship('Comment', back_populates='user', lazy='dynamic')
     orders = db.relationship('Order', back_populates='user', lazy='dynamic')
-    bookings = db.relationship('Booking', back_populates='user', lazy='dynamic')
     events = db.relationship('Event', back_populates='user', lazy='dynamic')
 
     def __repr__(self):
@@ -27,7 +26,7 @@ class Event(db.Model):
     description = db.Column(db.String(500))
     event_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    price = db.Column(db.Numeric(precision=10, scale=2))
+    price = db.Column(db.Float, nullable=False)
     ticketsAvailable = db.Column(db.Integer, nullable=False, default=1)  # Default tickets
     status = db.Column(db.String(20), default="Open", nullable=False)
     category = db.Column(db.String(50), nullable=True)  # New category field
@@ -36,25 +35,12 @@ class Event(db.Model):
 
     # Relationships
     orders = db.relationship('Order', back_populates='event', cascade='all, delete-orphan', lazy='dynamic')
-    bookings = db.relationship('Booking', back_populates='event', lazy=True)
     comments = db.relationship('Comment', back_populates='event', lazy='dynamic')
     user = db.relationship('User', back_populates='events')
 
     def __repr__(self):
         return f"Event(Name: {self.name}, Date: {self.event_date})"
 
-
-class Booking(db.Model):
-    __tablename__ = 'bookings'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
-    booking_date = db.Column(db.DateTime, default=datetime.now)
-    status = db.Column(db.String(50), default='confirmed')
-
-    # Relationships
-    user = db.relationship('User', back_populates='bookings')
-    event = db.relationship('Event', back_populates='bookings')
 
 class Comment(db.Model):
     __tablename__ = 'comments'
@@ -81,8 +67,8 @@ class Order(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     order_date = db.Column(db.DateTime, default=datetime.now)
     status = db.Column(db.String(50), default='pending')
-    ticket_type = db.Column(db.String(50), nullable=False)  # New field for ticket type
-
+    ticket_type = db.Column(db.String(50), nullable=False)
+    price = db.Column(db.Float, nullable=False)
     # Relationships
     user = db.relationship('User', back_populates='orders')
     event = db.relationship('Event', back_populates='orders')

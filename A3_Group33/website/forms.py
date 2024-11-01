@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import DateTimeLocalField, StringField, PasswordField, TextAreaField, DateTimeField, IntegerField, SubmitField, SelectField
+from wtforms import DateTimeLocalField, StringField, PasswordField, TextAreaField, DateTimeField, IntegerField, SubmitField, SelectField, FloatField
 from wtforms.validators import InputRequired, Email, EqualTo, Length, NumberRange
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 
@@ -29,6 +29,7 @@ class EventForm(FlaskForm):
 		('Sold Out', 'Sold Out'),
 		('Cancelled', 'Cancelled'),
 		])
+    price = FloatField('Price', validators=[InputRequired()])  
     image = FileField('Event Image', validators=[
     FileRequired(message='Image cannot be empty'),
     FileAllowed(ALLOWED_FILE_EXTENSIONS , message='Only supports PNG, JPG, png, jpg')])    
@@ -62,6 +63,9 @@ class OrderForm(FlaskForm):
 		('General Admission', 'General Admission'),
 		('VIP', 'VIP'),
 		])
+    price = FloatField(
+        'Event Price', )
+    render_kw={"readonly": True, "class": "form-control"}     
     submit = SubmitField('Place Order')
 
 class UploadForm(FlaskForm):

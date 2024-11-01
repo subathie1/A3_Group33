@@ -11,7 +11,7 @@ main_bp = Blueprint('main', __name__)
 @main_bp.route('/')
 def index():
     categories = Event.query.with_entities(Event.category).distinct().all()  
-    events = db.session.scalars(db.select(Event)).all()
+    events = Event.query.all()  # Fetch all events for display
 
     if not events:
         flash('No events found.', 'warning')
@@ -85,7 +85,7 @@ def create_order(event_id):
             status='pending',
             ticket_type=ticket_type,
             event_id=event.id,
-            user_id=current_user.id
+            user_id=current_user.id,
         )
 
         event.ticketsAvailable -= form.quantity.data  # Reduce ticket count
@@ -101,9 +101,6 @@ def create_order(event_id):
         return redirect(url_for('event_bp.booking_confirmation', order_id=new_order.id))
 
     return render_template('create_order.html', form=form, event=event)
-
-
-
 
 @main_bp.route('/booking-history')
 @login_required
